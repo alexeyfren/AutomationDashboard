@@ -1,0 +1,11 @@
+C:\Projects\AutomationDashboard\AutomationDashboard\bin\Debug\AutomationDashboard.exe.config
+C:\Projects\AutomationDashboard\AutomationDashboard\bin\Debug\AutomationDashboard.exe
+C:\Projects\AutomationDashboard\AutomationDashboard\bin\Debug\AutomationDashboard.pdb
+C:\Projects\AutomationDashboard\AutomationDashboard\bin\Debug\MySql.Data.dll
+C:\Projects\AutomationDashboard\AutomationDashboard\obj\Debug\AutomationDashboard.csprojResolveAssemblyReference.cache
+C:\Projects\AutomationDashboard\AutomationDashboard\obj\Debug\AutomationDashboard.MainForm.resources
+C:\Projects\AutomationDashboard\AutomationDashboard\obj\Debug\AutomationDashboard.Properties.Resources.resources
+C:\Projects\AutomationDashboard\AutomationDashboard\obj\Debug\AutomationDashboard.csproj.GenerateResource.Cache
+C:\Projects\AutomationDashboard\AutomationDashboard\obj\Debug\AutomationDashboard.exe
+C:\Projects\AutomationDashboard\AutomationDashboard\obj\Debug\AutomationDashboard.pdb
+C:\Projects\AutomationDashboard\AutomationDashboard\bin\Debug\ZedGraph.dll
