@@ -31,6 +31,10 @@ namespace AutomationDashboard
             comboBox_Branch.Items.Add("All");
             comboBox_Branch.Items.AddRange(m_MySql.GetAllBranches());
             comboBox_Branch.SelectedIndex = 0;
+
+            comboBox_Node.SelectedIndex = 0;
+
+            UpdateTestCaseVisualSettings(null);
         }
 
         public void InitializeTestsTree()
@@ -65,29 +69,33 @@ namespace AutomationDashboard
             treeView_Tests.Nodes[0].Expand();
         }
 
-        public void RefreshGraphs(string branch)
+        public void RefreshGraphs(string branch, string node)
         {
-            UpdateTestsCountChart(branch);
-            UpdateTestsSetsChart(branch);
+            UpdateTestsCountChart(branch, node);
+            UpdateTestsSetsChart(branch, node);
 
             if (treeView_Tests.SelectedNode != null && treeView_Tests.SelectedNode.Tag != null)
             { 
                 zedGraphControl_TestPassFail.Visible = true;
-                UpdateTestPassFailChart(branch, treeView_Tests.SelectedNode.Tag.ToString(), treeView_Tests.SelectedNode.Text.ToString());
+                UpdateTestPassFailChart(branch, node, treeView_Tests.SelectedNode.Tag.ToString(), treeView_Tests.SelectedNode.Text.ToString());
+                UpdateTestExecutionsChart(branch, node, treeView_Tests.SelectedNode.Tag.ToString(), treeView_Tests.SelectedNode.Text.ToString());
             }
             else
                 zedGraphControl_TestPassFail.Visible = false;
         }
 
-        public void UpdateTestsCountChart(string branch)
+        public void UpdateTestsCountChart(string branch, string node)
         {
             GraphPane myPane = zedGraphControl_TestsCount.GraphPane;
             myPane.CurveList.Clear();
             zedGraphControl_TestsCount.Refresh();
 
-            Dictionary<DateTime, double> ret = m_MySql.GetTestsCountByDate(branch);
+            Dictionary<DateTime, double> ret = m_MySql.GetTestsCountByDate(branch, node);
+            label_TotalTests.Text = ret.Count.ToString();
             if (ret.Count == 0)
                 return;
+
+            label_TotalTests.Text = ret.Last().Value.ToString();
 
             List<double> vals = new List<double>();
             List<double> dates = new List<double>();
@@ -128,13 +136,14 @@ namespace AutomationDashboard
             zedGraphControl_TestsCount.Refresh();
         }
 
-        public void UpdateTestsSetsChart(string branch)
+        public void UpdateTestsSetsChart(string branch, string node)
         {
             GraphPane myPane = zedGraphControl_TestSets.GraphPane;
             myPane.CurveList.Clear();
             zedGraphControl_TestSets.Refresh();
 
-            Dictionary<DateTime, List<double>> ret = m_MySql.GetPassFailTestsCountByDate(branch);
+            Dictionary<DateTime, List<double>> ret = m_MySql.GetPassFailTestsCountByDate(branch, node);
+            label_TotalExecutionsCount.Text = ret.Count.ToString();
             if (ret.Count == 0)
                 return;
 
@@ -175,14 +184,16 @@ namespace AutomationDashboard
             zedGraphControl_TestSets.Refresh();
         }
 
-        public void UpdateTestPassFailChart(string branch, string testID, string testName)
+        public void UpdateTestPassFailChart(string branch, string node, string testID, string testName)
         {
             GraphPane myPane = zedGraphControl_TestPassFail.GraphPane;
             myPane.CurveList.Clear();
             zedGraphControl_TestPassFail.Refresh();
 
-            double passed = m_MySql.GetTestStatusCountByDate(branch, testID, "PASS");
-            double failed = m_MySql.GetTestStatusCountByDate(branch, testID, "FAIL");
+            double passed = m_MySql.GetTestStatusCountByDate(branch, node, testID, "PASS");
+            double failed = m_MySql.GetTestStatusCountByDate(branch, node, testID, "FAIL");
+
+            label_TestTotalExecutionsCount.Text = (passed + failed).ToString();
 
             if (passed == 0 && failed == 0)
                 return;
@@ -204,12 +215,75 @@ namespace AutomationDashboard
             zedGraphControl_TestPassFail.Refresh();
         }
 
-        private void comboBox_Branch_SelectedValueChanged(object sender, EventArgs e)
+        public void UpdateTestExecutionsChart(string branch, string node, string testID, string testName)
         {
-            if (comboBox_Branch.SelectedItem.ToString() == null)
+            GraphPane myPane = zedGraphControl_TestPassFailByExecution.GraphPane;
+            myPane.CurveList.Clear();
+            zedGraphControl_TestPassFailByExecution.Refresh();
+
+            Dictionary<DateTime, string> ret = m_MySql.GetTestCaseExecutionsByDate(branch, node, testID);
+            if (ret.Count == 0)
                 return;
 
-            RefreshGraphs(comboBox_Branch.SelectedItem.ToString());
+            List<double> values_pass = new List<double>();
+            List<double> values_fail = new List<double>();
+            List<string> dates = new List<string>();
+
+            foreach (DateTime rec in ret.Keys)
+            {
+                if (ret[rec] == "PASS")
+                {
+                    values_pass.Add(1);
+                    values_fail.Add(0);
+                }
+                else
+                {
+                    values_pass.Add(0);
+                    values_fail.Add(-1);
+                }
+
+                dates.Add(rec.ToShortDateString());
+            }
+
+            myPane.BarSettings.Type = BarType.Stack;
+            myPane.Title.Text = "[" + testName + "] test status per execution";
+            myPane.Fill = new Fill(Color.Snow, Color.LightGoldenrodYellow, Color.Snow);
+
+            myPane.XAxis.Title.Text = "Execution (days)";
+            myPane.XAxis.Type = AxisType.Text;
+            myPane.XAxis.Scale.Format = "dd.MM.yy";
+            myPane.XAxis.Scale.FontSpec.Angle = 45;
+            myPane.XAxis.MajorGrid.IsVisible = true;
+            myPane.XAxis.Scale.TextLabels = dates.ToArray();
+
+            myPane.YAxis.Title.Text = "Status (PASSED/FAILED)";
+            myPane.YAxis.MajorGrid.IsVisible = true;
+            
+            myPane.YAxis.Scale.Min = -2;
+            myPane.YAxis.Scale.Max = 2;
+            myPane.YAxis.Scale.MajorStep = 1;
+
+            BarItem passedBar = myPane.AddBar("Passed", null, values_pass.ToArray(), Color.Green);
+            BarItem failedBar = myPane.AddBar("Failed", null, values_fail.ToArray(), Color.Red);
+            
+            zedGraphControl_TestPassFailByExecution.AxisChange();
+            zedGraphControl_TestPassFailByExecution.Refresh();
+        }
+
+        private void comboBox_Branch_SelectedValueChanged(object sender, EventArgs e)
+        {
+            if (comboBox_Branch.SelectedItem == null || comboBox_Node.SelectedItem == null)
+                return;
+
+            RefreshGraphs(comboBox_Branch.SelectedItem.ToString(), comboBox_Node.SelectedItem.ToString());
+        }
+
+        private void comboBox_Node_SelectedValueChanged(object sender, EventArgs e)
+        {
+            if (comboBox_Branch.SelectedItem == null || comboBox_Node.SelectedItem == null)
+                return;
+
+            RefreshGraphs(comboBox_Branch.SelectedItem.ToString(), comboBox_Node.SelectedItem.ToString());
         }
 
         private void treeView_Tests_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
@@ -221,16 +295,40 @@ namespace AutomationDashboard
             {
                 if (treeView_Tests.SelectedNode != null && treeView_Tests.SelectedNode.Tag != null)
                 {
-                    zedGraphControl_TestPassFail.Visible = true;
-                    label_TestGraph.Text = "Charts fot test case: " + treeView_Tests.SelectedNode.Text;
-                    label_TestGraph.Text += "";
-                    UpdateTestPassFailChart(comboBox_Branch.SelectedItem.ToString(), treeView_Tests.SelectedNode.Tag.ToString(), treeView_Tests.SelectedNode.Text.ToString());
+                    UpdateTestCaseVisualSettings(treeView_Tests.SelectedNode.Text);
+                    UpdateTestPassFailChart(comboBox_Branch.SelectedItem.ToString(), comboBox_Node.SelectedItem.ToString(), treeView_Tests.SelectedNode.Tag.ToString(), treeView_Tests.SelectedNode.Text.ToString());
+                    UpdateTestExecutionsChart(comboBox_Branch.SelectedItem.ToString(), comboBox_Node.SelectedItem.ToString(), treeView_Tests.SelectedNode.Tag.ToString(), treeView_Tests.SelectedNode.Text.ToString());
                 }
                 else
                 {
-                    zedGraphControl_TestPassFail.Visible = false;
-                    label_TestGraph.Text = "";
+                    UpdateTestCaseVisualSettings(null);
                 }
+            }
+        }
+
+        private void UpdateTestCaseVisualSettings(string testCaseName)
+        {
+            if (testCaseName == null)
+            {
+                label_ChartForTest.Visible = false;
+                label_TestName.Visible = false;
+                label_TestTotalExecutions.Visible = false;
+                label_TestTotalExecutionsCount.Visible = false;
+
+                zedGraphControl_TestPassFail.Visible = false;
+                zedGraphControl_TestPassFailByExecution.Visible = false;
+            }
+            else
+            {
+                zedGraphControl_TestPassFail.Visible = true;
+                zedGraphControl_TestPassFailByExecution.Visible = true;
+
+                label_TestName.Text = "[" + testCaseName + "]";
+
+                label_ChartForTest.Visible = true;
+                label_TestName.Visible = true;
+                label_TestTotalExecutions.Visible = true;
+                label_TestTotalExecutionsCount.Visible = true;
             }
         }
     }

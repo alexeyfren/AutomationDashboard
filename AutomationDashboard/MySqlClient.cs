@@ -52,7 +52,7 @@ namespace AutomationDashboard
         public DataTable GetAllTests()
         {
             MySqlCommand cmd = m_Client.CreateCommand();
-            cmd.CommandText = "SELECT * FROM TestCases";
+            cmd.CommandText = "SELECT * FROM TestCases ORDER BY TestCaseName ASC";
 
             MySqlDataAdapter adap = new MySqlDataAdapter(cmd);
             DataTable dt = new DataTable();
@@ -78,15 +78,21 @@ namespace AutomationDashboard
             return branches.ToArray();
         }
 
-        public Dictionary<DateTime, double> GetTestsCountByDate(string branch)
+        public Dictionary<DateTime, double> GetTestsCountByDate(string branch, string node)
         {
             Dictionary<DateTime, double> ret = new Dictionary<DateTime, double>();
 
             MySqlCommand cmd = m_Client.CreateCommand();
-            if (branch == "All")
-                cmd.CommandText = "SELECT * FROM ExecutionStatistics ORDER BY StartTime ASC";
-            else
-                cmd.CommandText = "SELECT * FROM ExecutionStatistics WHERE branch='" + branch + "' ORDER BY StartTime ASC";
+            cmd.CommandText = "SELECT * FROM ExecutionStatistics";
+
+            if (branch != "All" && node != "All")
+                cmd.CommandText += " WHERE branch='" + branch + "' and threeNode=" + NodeAsInt(node);
+            else if (branch != "All" && node == "All")
+                cmd.CommandText += " WHERE branch='" + branch + "'";
+            else if (branch == "All" && node != "All")
+                cmd.CommandText += " WHERE threeNode=" + NodeAsInt(node);
+
+            cmd.CommandText += " ORDER BY StartTime ASC";
 
             MySqlDataAdapter adap = new MySqlDataAdapter(cmd);
             DataTable executionsDT = new DataTable();
@@ -100,16 +106,22 @@ namespace AutomationDashboard
             return ret;
         }
 
-        public Dictionary<DateTime, List<double>> GetPassFailTestsCountByDate(string branch)
+        public Dictionary<DateTime, List<double>> GetPassFailTestsCountByDate(string branch, string node)
         {
 
             Dictionary<DateTime, List<double>> ret = new Dictionary<DateTime, List<double>>();
 
             MySqlCommand cmd = m_Client.CreateCommand();
-            if (branch == "All")
-                cmd.CommandText = "SELECT * FROM ExecutionStatistics ORDER BY StartTime ASC";
-            else
-                cmd.CommandText = "SELECT * FROM ExecutionStatistics WHERE branch='" + branch + "' ORDER BY StartTime ASC";
+            cmd.CommandText = "SELECT * FROM ExecutionStatistics";
+
+            if (branch != "All" && node != "All")
+                cmd.CommandText += " WHERE branch='" + branch + "' and threeNode=" + NodeAsInt(node);
+            else if (branch != "All" && node == "All")
+                cmd.CommandText += " WHERE branch='" + branch + "'";
+            else if (branch == "All" && node != "All")
+                cmd.CommandText += " WHERE threeNode=" + NodeAsInt(node);
+
+            cmd.CommandText += " ORDER BY StartTime ASC";
 
             MySqlDataAdapter adap = new MySqlDataAdapter(cmd);
             DataTable executionsDT = new DataTable();
@@ -123,15 +135,21 @@ namespace AutomationDashboard
             return ret;
         }
 
-        public int GetTestStatusCountByDate(string branch, string testCaseID, string status)
+        public int GetTestStatusCountByDate(string branch, string node, string testCaseID, string status)
         {
             int ret = 0;
 
             MySqlCommand cmd = m_Client.CreateCommand();
-            if (branch == "All")
-                cmd.CommandText = "SELECT ID FROM ExecutionStatistics ORDER BY StartTime ASC";
-            else
-                cmd.CommandText = "SELECT ID FROM ExecutionStatistics WHERE branch='" + branch + "' ORDER BY StartTime ASC";
+            cmd.CommandText = "SELECT ID FROM ExecutionStatistics";
+
+            if (branch != "All" && node != "All")
+                cmd.CommandText += " WHERE branch='" + branch + "' and threeNode=" + NodeAsInt(node);
+            else if (branch != "All" && node == "All")
+                cmd.CommandText += " WHERE branch='" + branch + "'";
+            else if (branch == "All" && node != "All")
+                cmd.CommandText += " WHERE threeNode=" + NodeAsInt(node);
+
+            cmd.CommandText += " ORDER BY StartTime ASC";
 
             List<string> executionIDs = new List<string>();
              
@@ -157,6 +175,56 @@ namespace AutomationDashboard
             }
 
             return ret;
+        }
+
+        public Dictionary<DateTime, string> GetTestCaseExecutionsByDate(string branch, string node, string testCaseID)
+        {
+            Dictionary<DateTime, string> ret = new Dictionary<DateTime, string>();
+
+            MySqlCommand cmd = m_Client.CreateCommand();
+            cmd.CommandText = "SELECT ID FROM ExecutionStatistics";
+
+            if (branch != "All" && node != "All")
+                cmd.CommandText += " WHERE branch='" + branch + "' and threeNode=" + NodeAsInt(node);
+            else if (branch != "All" && node == "All")
+                cmd.CommandText += " WHERE branch='" + branch + "'";
+            else if (branch == "All" && node != "All")
+                cmd.CommandText += " WHERE threeNode=" + NodeAsInt(node);
+
+            cmd.CommandText += " ORDER BY StartTime ASC";
+
+            List<string> executionIDs = new List<string>();
+
+            MySqlDataAdapter adap = new MySqlDataAdapter(cmd);
+            DataTable executionsDT = new DataTable();
+            adap.Fill(executionsDT);
+
+            foreach (DataRow exec in executionsDT.Rows)
+            {
+                executionIDs.Add(exec["ID"].ToString());
+            }
+
+            cmd = m_Client.CreateCommand();
+            cmd.CommandText = "SELECT * FROM TestCaseStatistics WHERE TestCaseID='" + testCaseID + "' ORDER BY StartTime ASC";
+            adap = new MySqlDataAdapter(cmd);
+            DataTable testsDT = new DataTable();
+            adap.Fill(testsDT);
+
+            foreach (DataRow exec in testsDT.Rows)
+            {
+                if (executionIDs.Contains(exec["ExecutionID"].ToString()))
+                    ret.Add((DateTime)exec["StartTime"], exec["Status"].ToString());
+            }
+
+            return ret;
+        }
+
+        private int NodeAsInt(string node)
+        {
+            if (node == "Single")
+                return 0;
+            else
+                return 1;
         }
     }
 }
