@@ -78,19 +78,19 @@ namespace AutomationDashboard
             return branches.ToArray();
         }
 
-        public Dictionary<DateTime, double> GetTestsCountByDate(string branch, string node)
+        public Dictionary<DateTime, double> GetTestsCountByDate(string branch, string node, DateTime from, DateTime to)
         {
             Dictionary<DateTime, double> ret = new Dictionary<DateTime, double>();
 
             MySqlCommand cmd = m_Client.CreateCommand();
-            cmd.CommandText = "SELECT * FROM ExecutionStatistics";
+            cmd.CommandText = "SELECT * FROM ExecutionStatistics WHERE StartTime>='" + from.ToString("yyyy-MM-dd")  + "' and StartTime<='" + to.ToString("yyyy-MM-dd") + "'";
 
             if (branch != "All" && node != "All")
-                cmd.CommandText += " WHERE branch='" + branch + "' and threeNode=" + NodeAsInt(node);
+                cmd.CommandText += " and branch='" + branch + "' and threeNode=" + NodeAsInt(node);
             else if (branch != "All" && node == "All")
-                cmd.CommandText += " WHERE branch='" + branch + "'";
+                cmd.CommandText += " and branch='" + branch + "'";
             else if (branch == "All" && node != "All")
-                cmd.CommandText += " WHERE threeNode=" + NodeAsInt(node);
+                cmd.CommandText += " and threeNode=" + NodeAsInt(node);
 
             cmd.CommandText += " ORDER BY StartTime ASC";
 
@@ -106,20 +106,19 @@ namespace AutomationDashboard
             return ret;
         }
 
-        public Dictionary<DateTime, List<double>> GetPassFailTestsCountByDate(string branch, string node)
+        public Dictionary<DateTime, List<double>> GetPassFailTestsCountByDate(string branch, string node, DateTime from, DateTime to)
         {
-
             Dictionary<DateTime, List<double>> ret = new Dictionary<DateTime, List<double>>();
 
             MySqlCommand cmd = m_Client.CreateCommand();
-            cmd.CommandText = "SELECT * FROM ExecutionStatistics";
+            cmd.CommandText = "SELECT * FROM ExecutionStatistics WHERE StartTime>='" + from.ToString("yyyy-MM-dd") + "' and StartTime<='" + to.ToString("yyyy-MM-dd") + "'";
 
             if (branch != "All" && node != "All")
-                cmd.CommandText += " WHERE branch='" + branch + "' and threeNode=" + NodeAsInt(node);
+                cmd.CommandText += " and branch='" + branch + "' and threeNode=" + NodeAsInt(node);
             else if (branch != "All" && node == "All")
-                cmd.CommandText += " WHERE branch='" + branch + "'";
+                cmd.CommandText += " and branch='" + branch + "'";
             else if (branch == "All" && node != "All")
-                cmd.CommandText += " WHERE threeNode=" + NodeAsInt(node);
+                cmd.CommandText += " and threeNode=" + NodeAsInt(node);
 
             cmd.CommandText += " ORDER BY StartTime ASC";
 
@@ -135,19 +134,19 @@ namespace AutomationDashboard
             return ret;
         }
 
-        public int GetTestStatusCountByDate(string branch, string node, string testCaseID, string status)
+        public int GetTestStatusCountByDate(string branch, string node, string testCaseID, string status, DateTime from, DateTime to)
         {
             int ret = 0;
 
             MySqlCommand cmd = m_Client.CreateCommand();
-            cmd.CommandText = "SELECT ID FROM ExecutionStatistics";
+            cmd.CommandText = "SELECT ID FROM ExecutionStatistics WHERE StartTime>='" + from.ToString("yyyy-MM-dd") + "' and StartTime<='" + to.ToString("yyyy-MM-dd") + "'";
 
             if (branch != "All" && node != "All")
-                cmd.CommandText += " WHERE branch='" + branch + "' and threeNode=" + NodeAsInt(node);
+                cmd.CommandText += " and branch='" + branch + "' and threeNode=" + NodeAsInt(node);
             else if (branch != "All" && node == "All")
-                cmd.CommandText += " WHERE branch='" + branch + "'";
+                cmd.CommandText += " and branch='" + branch + "'";
             else if (branch == "All" && node != "All")
-                cmd.CommandText += " WHERE threeNode=" + NodeAsInt(node);
+                cmd.CommandText += " and threeNode=" + NodeAsInt(node);
 
             cmd.CommandText += " ORDER BY StartTime ASC";
 
@@ -177,19 +176,19 @@ namespace AutomationDashboard
             return ret;
         }
 
-        public Dictionary<DateTime, string> GetTestCaseExecutionsByDate(string branch, string node, string testCaseID)
+        public Dictionary<DateTime, string> GetTestCaseExecutionsByDate(string branch, string node, string testCaseID, DateTime from, DateTime to)
         {
             Dictionary<DateTime, string> ret = new Dictionary<DateTime, string>();
 
             MySqlCommand cmd = m_Client.CreateCommand();
-            cmd.CommandText = "SELECT ID FROM ExecutionStatistics";
+            cmd.CommandText = "SELECT ID FROM ExecutionStatistics WHERE StartTime>='" + from.ToString("yyyy-MM-dd") + "' and StartTime<='" + to.ToString("yyyy-MM-dd") + "'";
 
             if (branch != "All" && node != "All")
-                cmd.CommandText += " WHERE branch='" + branch + "' and threeNode=" + NodeAsInt(node);
+                cmd.CommandText += " and branch='" + branch + "' and threeNode=" + NodeAsInt(node);
             else if (branch != "All" && node == "All")
-                cmd.CommandText += " WHERE branch='" + branch + "'";
+                cmd.CommandText += " and branch='" + branch + "'";
             else if (branch == "All" && node != "All")
-                cmd.CommandText += " WHERE threeNode=" + NodeAsInt(node);
+                cmd.CommandText += " and threeNode=" + NodeAsInt(node);
 
             cmd.CommandText += " ORDER BY StartTime ASC";
 

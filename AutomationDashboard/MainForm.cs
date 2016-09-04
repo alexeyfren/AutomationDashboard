@@ -26,8 +26,9 @@ namespace AutomationDashboard
             if (!m_MySql.IsConnected)
                 this.Close();
 
+            splitContainerMain.SplitterDistance = 380;
             InitializeTestsTree();
-
+            
             comboBox_Branch.Items.Add("All");
             comboBox_Branch.Items.AddRange(m_MySql.GetAllBranches());
             comboBox_Branch.SelectedIndex = 0;
@@ -69,28 +70,28 @@ namespace AutomationDashboard
             treeView_Tests.Nodes[0].Expand();
         }
 
-        public void RefreshGraphs(string branch, string node)
+        public void RefreshGraphs(string branch, string node, DateTime from, DateTime to)
         {
-            UpdateTestsCountChart(branch, node);
-            UpdateTestsSetsChart(branch, node);
+            UpdateTestsCountChart(branch, node, from, to);
+            UpdateTestsSetsChart(branch, node, from, to);
 
             if (treeView_Tests.SelectedNode != null && treeView_Tests.SelectedNode.Tag != null)
             { 
                 zedGraphControl_TestPassFail.Visible = true;
-                UpdateTestPassFailChart(branch, node, treeView_Tests.SelectedNode.Tag.ToString(), treeView_Tests.SelectedNode.Text.ToString());
-                UpdateTestExecutionsChart(branch, node, treeView_Tests.SelectedNode.Tag.ToString(), treeView_Tests.SelectedNode.Text.ToString());
+                UpdateTestPassFailChart(branch, node, treeView_Tests.SelectedNode.Tag.ToString(), treeView_Tests.SelectedNode.Text.ToString(), from, to);
+                UpdateTestExecutionsChart(branch, node, treeView_Tests.SelectedNode.Tag.ToString(), treeView_Tests.SelectedNode.Text.ToString(), from, to);
             }
             else
                 zedGraphControl_TestPassFail.Visible = false;
         }
 
-        public void UpdateTestsCountChart(string branch, string node)
+        public void UpdateTestsCountChart(string branch, string node, DateTime from, DateTime to)
         {
             GraphPane myPane = zedGraphControl_TestsCount.GraphPane;
             myPane.CurveList.Clear();
             zedGraphControl_TestsCount.Refresh();
 
-            Dictionary<DateTime, double> ret = m_MySql.GetTestsCountByDate(branch, node);
+            Dictionary<DateTime, double> ret = m_MySql.GetTestsCountByDate(branch, node, from, to);
             label_TotalTests.Text = ret.Count.ToString();
             if (ret.Count == 0)
                 return;
@@ -136,13 +137,13 @@ namespace AutomationDashboard
             zedGraphControl_TestsCount.Refresh();
         }
 
-        public void UpdateTestsSetsChart(string branch, string node)
+        public void UpdateTestsSetsChart(string branch, string node, DateTime from, DateTime to)
         {
             GraphPane myPane = zedGraphControl_TestSets.GraphPane;
             myPane.CurveList.Clear();
             zedGraphControl_TestSets.Refresh();
 
-            Dictionary<DateTime, List<double>> ret = m_MySql.GetPassFailTestsCountByDate(branch, node);
+            Dictionary<DateTime, List<double>> ret = m_MySql.GetPassFailTestsCountByDate(branch, node, from, to);
             label_TotalExecutionsCount.Text = ret.Count.ToString();
             if (ret.Count == 0)
                 return;
@@ -184,14 +185,14 @@ namespace AutomationDashboard
             zedGraphControl_TestSets.Refresh();
         }
 
-        public void UpdateTestPassFailChart(string branch, string node, string testID, string testName)
+        public void UpdateTestPassFailChart(string branch, string node, string testID, string testName, DateTime from, DateTime to)
         {
             GraphPane myPane = zedGraphControl_TestPassFail.GraphPane;
             myPane.CurveList.Clear();
             zedGraphControl_TestPassFail.Refresh();
 
-            double passed = m_MySql.GetTestStatusCountByDate(branch, node, testID, "PASS");
-            double failed = m_MySql.GetTestStatusCountByDate(branch, node, testID, "FAIL");
+            double passed = m_MySql.GetTestStatusCountByDate(branch, node, testID, "PASS", from, to);
+            double failed = m_MySql.GetTestStatusCountByDate(branch, node, testID, "FAIL", from, to);
 
             label_TestTotalExecutionsCount.Text = (passed + failed).ToString();
 
@@ -215,13 +216,13 @@ namespace AutomationDashboard
             zedGraphControl_TestPassFail.Refresh();
         }
 
-        public void UpdateTestExecutionsChart(string branch, string node, string testID, string testName)
+        public void UpdateTestExecutionsChart(string branch, string node, string testID, string testName, DateTime from, DateTime to)
         {
             GraphPane myPane = zedGraphControl_TestPassFailByExecution.GraphPane;
             myPane.CurveList.Clear();
             zedGraphControl_TestPassFailByExecution.Refresh();
 
-            Dictionary<DateTime, string> ret = m_MySql.GetTestCaseExecutionsByDate(branch, node, testID);
+            Dictionary<DateTime, string> ret = m_MySql.GetTestCaseExecutionsByDate(branch, node, testID, from, to);
             if (ret.Count == 0)
                 return;
 
@@ -275,7 +276,7 @@ namespace AutomationDashboard
             if (comboBox_Branch.SelectedItem == null || comboBox_Node.SelectedItem == null)
                 return;
 
-            RefreshGraphs(comboBox_Branch.SelectedItem.ToString(), comboBox_Node.SelectedItem.ToString());
+            RefreshGraphs(comboBox_Branch.SelectedItem.ToString(), comboBox_Node.SelectedItem.ToString(), dateTimePicker_From.Value, dateTimePicker_To.Value);
         }
 
         private void comboBox_Node_SelectedValueChanged(object sender, EventArgs e)
@@ -283,7 +284,23 @@ namespace AutomationDashboard
             if (comboBox_Branch.SelectedItem == null || comboBox_Node.SelectedItem == null)
                 return;
 
-            RefreshGraphs(comboBox_Branch.SelectedItem.ToString(), comboBox_Node.SelectedItem.ToString());
+            RefreshGraphs(comboBox_Branch.SelectedItem.ToString(), comboBox_Node.SelectedItem.ToString(), dateTimePicker_From.Value, dateTimePicker_To.Value);
+        }
+
+        private void dateTimePicker_From_ValueChanged(object sender, EventArgs e)
+        {
+            if (comboBox_Branch.SelectedItem == null || comboBox_Node.SelectedItem == null)
+                return;
+
+            RefreshGraphs(comboBox_Branch.SelectedItem.ToString(), comboBox_Node.SelectedItem.ToString(), dateTimePicker_From.Value, dateTimePicker_To.Value);
+        }
+
+        private void dateTimePicker_To_ValueChanged(object sender, EventArgs e)
+        {
+            if (comboBox_Branch.SelectedItem == null || comboBox_Node.SelectedItem == null)
+                return;
+
+            RefreshGraphs(comboBox_Branch.SelectedItem.ToString(), comboBox_Node.SelectedItem.ToString(), dateTimePicker_From.Value, dateTimePicker_To.Value);
         }
 
         private void treeView_Tests_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
@@ -296,8 +313,8 @@ namespace AutomationDashboard
                 if (treeView_Tests.SelectedNode != null && treeView_Tests.SelectedNode.Tag != null)
                 {
                     UpdateTestCaseVisualSettings(treeView_Tests.SelectedNode.Text);
-                    UpdateTestPassFailChart(comboBox_Branch.SelectedItem.ToString(), comboBox_Node.SelectedItem.ToString(), treeView_Tests.SelectedNode.Tag.ToString(), treeView_Tests.SelectedNode.Text.ToString());
-                    UpdateTestExecutionsChart(comboBox_Branch.SelectedItem.ToString(), comboBox_Node.SelectedItem.ToString(), treeView_Tests.SelectedNode.Tag.ToString(), treeView_Tests.SelectedNode.Text.ToString());
+                    UpdateTestPassFailChart(comboBox_Branch.SelectedItem.ToString(), comboBox_Node.SelectedItem.ToString(), treeView_Tests.SelectedNode.Tag.ToString(), treeView_Tests.SelectedNode.Text.ToString(), dateTimePicker_From.Value, dateTimePicker_To.Value);
+                    UpdateTestExecutionsChart(comboBox_Branch.SelectedItem.ToString(), comboBox_Node.SelectedItem.ToString(), treeView_Tests.SelectedNode.Tag.ToString(), treeView_Tests.SelectedNode.Text.ToString(), dateTimePicker_From.Value, dateTimePicker_To.Value);
                 }
                 else
                 {
