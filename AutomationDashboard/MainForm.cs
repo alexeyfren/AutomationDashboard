@@ -27,11 +27,12 @@ namespace AutomationDashboard
                 this.Close();
 
             splitContainerMain.SplitterDistance = 380;
+            dateTimePicker_To.Value = DateTime.Now;
             InitializeTestsTree();
             
-            comboBox_Branch.Items.Add("All");
-            comboBox_Branch.Items.AddRange(m_MySql.GetAllBranches());
-            comboBox_Branch.SelectedIndex = 0;
+            comboBox_Version.Items.Add("All");
+            comboBox_Version.Items.AddRange(m_MySql.GetAllVersions());
+            comboBox_Version.SelectedIndex = 0;
 
             comboBox_Node.SelectedIndex = 0;
 
@@ -273,34 +274,34 @@ namespace AutomationDashboard
 
         private void comboBox_Branch_SelectedValueChanged(object sender, EventArgs e)
         {
-            if (comboBox_Branch.SelectedItem == null || comboBox_Node.SelectedItem == null)
+            if (comboBox_Version.SelectedItem == null || comboBox_Node.SelectedItem == null)
                 return;
 
-            RefreshGraphs(comboBox_Branch.SelectedItem.ToString(), comboBox_Node.SelectedItem.ToString(), dateTimePicker_From.Value, dateTimePicker_To.Value);
+            RefreshGraphs(comboBox_Version.SelectedItem.ToString(), comboBox_Node.SelectedItem.ToString(), dateTimePicker_From.Value, dateTimePicker_To.Value);
         }
 
         private void comboBox_Node_SelectedValueChanged(object sender, EventArgs e)
         {
-            if (comboBox_Branch.SelectedItem == null || comboBox_Node.SelectedItem == null)
+            if (comboBox_Version.SelectedItem == null || comboBox_Node.SelectedItem == null)
                 return;
 
-            RefreshGraphs(comboBox_Branch.SelectedItem.ToString(), comboBox_Node.SelectedItem.ToString(), dateTimePicker_From.Value, dateTimePicker_To.Value);
+            RefreshGraphs(comboBox_Version.SelectedItem.ToString(), comboBox_Node.SelectedItem.ToString(), dateTimePicker_From.Value, dateTimePicker_To.Value);
         }
 
         private void dateTimePicker_From_ValueChanged(object sender, EventArgs e)
         {
-            if (comboBox_Branch.SelectedItem == null || comboBox_Node.SelectedItem == null)
+            if (comboBox_Version.SelectedItem == null || comboBox_Node.SelectedItem == null)
                 return;
 
-            RefreshGraphs(comboBox_Branch.SelectedItem.ToString(), comboBox_Node.SelectedItem.ToString(), dateTimePicker_From.Value, dateTimePicker_To.Value);
+            RefreshGraphs(comboBox_Version.SelectedItem.ToString(), comboBox_Node.SelectedItem.ToString(), dateTimePicker_From.Value, dateTimePicker_To.Value);
         }
 
         private void dateTimePicker_To_ValueChanged(object sender, EventArgs e)
         {
-            if (comboBox_Branch.SelectedItem == null || comboBox_Node.SelectedItem == null)
+            if (comboBox_Version.SelectedItem == null || comboBox_Node.SelectedItem == null)
                 return;
 
-            RefreshGraphs(comboBox_Branch.SelectedItem.ToString(), comboBox_Node.SelectedItem.ToString(), dateTimePicker_From.Value, dateTimePicker_To.Value);
+            RefreshGraphs(comboBox_Version.SelectedItem.ToString(), comboBox_Node.SelectedItem.ToString(), dateTimePicker_From.Value, dateTimePicker_To.Value);
         }
 
         private void treeView_Tests_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
@@ -313,8 +314,8 @@ namespace AutomationDashboard
                 if (treeView_Tests.SelectedNode != null && treeView_Tests.SelectedNode.Tag != null)
                 {
                     UpdateTestCaseVisualSettings(treeView_Tests.SelectedNode.Text);
-                    UpdateTestPassFailChart(comboBox_Branch.SelectedItem.ToString(), comboBox_Node.SelectedItem.ToString(), treeView_Tests.SelectedNode.Tag.ToString(), treeView_Tests.SelectedNode.Text.ToString(), dateTimePicker_From.Value, dateTimePicker_To.Value);
-                    UpdateTestExecutionsChart(comboBox_Branch.SelectedItem.ToString(), comboBox_Node.SelectedItem.ToString(), treeView_Tests.SelectedNode.Tag.ToString(), treeView_Tests.SelectedNode.Text.ToString(), dateTimePicker_From.Value, dateTimePicker_To.Value);
+                    UpdateTestPassFailChart(comboBox_Version.SelectedItem.ToString(), comboBox_Node.SelectedItem.ToString(), treeView_Tests.SelectedNode.Tag.ToString(), treeView_Tests.SelectedNode.Text.ToString(), dateTimePicker_From.Value, dateTimePicker_To.Value);
+                    UpdateTestExecutionsChart(comboBox_Version.SelectedItem.ToString(), comboBox_Node.SelectedItem.ToString(), treeView_Tests.SelectedNode.Tag.ToString(), treeView_Tests.SelectedNode.Text.ToString(), dateTimePicker_From.Value, dateTimePicker_To.Value);
                 }
                 else
                 {

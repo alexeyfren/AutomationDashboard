@@ -36,10 +36,14 @@
             this.zedGraphControl_TestsCount = new ZedGraph.ZedGraphControl();
             this.zedGraphControl_TestSets = new ZedGraph.ZedGraphControl();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.label_Branch = new System.Windows.Forms.Label();
-            this.comboBox_Branch = new System.Windows.Forms.ComboBox();
+            this.label_Version = new System.Windows.Forms.Label();
+            this.comboBox_Version = new System.Windows.Forms.ComboBox();
             this.label_Node = new System.Windows.Forms.Label();
             this.comboBox_Node = new System.Windows.Forms.ComboBox();
+            this.label_To = new System.Windows.Forms.Label();
+            this.label_From = new System.Windows.Forms.Label();
+            this.dateTimePicker_From = new System.Windows.Forms.DateTimePicker();
+            this.dateTimePicker_To = new System.Windows.Forms.DateTimePicker();
             this.zedGraphControl_TestPassFail = new ZedGraph.ZedGraphControl();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.label2 = new System.Windows.Forms.Label();
@@ -52,10 +56,6 @@
             this.label_TestTotalExecutions = new System.Windows.Forms.Label();
             this.label_TestTotalExecutionsCount = new System.Windows.Forms.Label();
             this.zedGraphControl_TestPassFailByExecution = new ZedGraph.ZedGraphControl();
-            this.label_From = new System.Windows.Forms.Label();
-            this.label_To = new System.Windows.Forms.Label();
-            this.dateTimePicker_From = new System.Windows.Forms.DateTimePicker();
-            this.dateTimePicker_To = new System.Windows.Forms.DateTimePicker();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
             this.splitContainerMain.Panel1.SuspendLayout();
             this.splitContainerMain.Panel2.SuspendLayout();
@@ -97,7 +97,7 @@
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 547F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 588F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(130, 588);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
@@ -169,7 +169,7 @@
             // tableLayoutPanel3
             // 
             this.tableLayoutPanel3.ColumnCount = 10;
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 57F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 60F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 88F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 47F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 74F));
@@ -179,8 +179,8 @@
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 33F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 102F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Controls.Add(this.label_Branch, 0, 0);
-            this.tableLayoutPanel3.Controls.Add(this.comboBox_Branch, 1, 0);
+            this.tableLayoutPanel3.Controls.Add(this.label_Version, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.comboBox_Version, 1, 0);
             this.tableLayoutPanel3.Controls.Add(this.label_Node, 2, 0);
             this.tableLayoutPanel3.Controls.Add(this.comboBox_Node, 3, 0);
             this.tableLayoutPanel3.Controls.Add(this.label_To, 7, 0);
@@ -196,35 +196,35 @@
             this.tableLayoutPanel3.Size = new System.Drawing.Size(673, 25);
             this.tableLayoutPanel3.TabIndex = 2;
             // 
-            // label_Branch
+            // label_Version
             // 
-            this.label_Branch.AutoSize = true;
-            this.label_Branch.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label_Branch.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
-            this.label_Branch.Location = new System.Drawing.Point(3, 0);
-            this.label_Branch.Name = "label_Branch";
-            this.label_Branch.Size = new System.Drawing.Size(51, 25);
-            this.label_Branch.TabIndex = 0;
-            this.label_Branch.Text = "Branch:";
-            this.label_Branch.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label_Version.AutoSize = true;
+            this.label_Version.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label_Version.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
+            this.label_Version.Location = new System.Drawing.Point(3, 0);
+            this.label_Version.Name = "label_Version";
+            this.label_Version.Size = new System.Drawing.Size(54, 25);
+            this.label_Version.TabIndex = 0;
+            this.label_Version.Text = "Version:";
+            this.label_Version.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // comboBox_Branch
+            // comboBox_Version
             // 
-            this.comboBox_Branch.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.comboBox_Branch.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox_Branch.FormattingEnabled = true;
-            this.comboBox_Branch.Location = new System.Drawing.Point(60, 3);
-            this.comboBox_Branch.Name = "comboBox_Branch";
-            this.comboBox_Branch.Size = new System.Drawing.Size(82, 21);
-            this.comboBox_Branch.TabIndex = 1;
-            this.comboBox_Branch.SelectedValueChanged += new System.EventHandler(this.comboBox_Branch_SelectedValueChanged);
+            this.comboBox_Version.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.comboBox_Version.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_Version.FormattingEnabled = true;
+            this.comboBox_Version.Location = new System.Drawing.Point(63, 3);
+            this.comboBox_Version.Name = "comboBox_Version";
+            this.comboBox_Version.Size = new System.Drawing.Size(82, 21);
+            this.comboBox_Version.TabIndex = 1;
+            this.comboBox_Version.SelectedValueChanged += new System.EventHandler(this.comboBox_Branch_SelectedValueChanged);
             // 
             // label_Node
             // 
             this.label_Node.AutoSize = true;
             this.label_Node.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label_Node.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
-            this.label_Node.Location = new System.Drawing.Point(148, 0);
+            this.label_Node.Location = new System.Drawing.Point(151, 0);
             this.label_Node.Name = "label_Node";
             this.label_Node.Size = new System.Drawing.Size(41, 25);
             this.label_Node.TabIndex = 2;
@@ -240,11 +240,57 @@
             "All",
             "Single",
             "Three"});
-            this.comboBox_Node.Location = new System.Drawing.Point(195, 3);
+            this.comboBox_Node.Location = new System.Drawing.Point(198, 3);
             this.comboBox_Node.Name = "comboBox_Node";
             this.comboBox_Node.Size = new System.Drawing.Size(68, 21);
             this.comboBox_Node.TabIndex = 3;
             this.comboBox_Node.SelectedValueChanged += new System.EventHandler(this.comboBox_Node_SelectedValueChanged);
+            // 
+            // label_To
+            // 
+            this.label_To.AutoSize = true;
+            this.label_To.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label_To.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
+            this.label_To.Location = new System.Drawing.Point(444, 0);
+            this.label_To.Name = "label_To";
+            this.label_To.Size = new System.Drawing.Size(27, 25);
+            this.label_To.TabIndex = 5;
+            this.label_To.Text = "To:";
+            this.label_To.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label_From
+            // 
+            this.label_From.AutoSize = true;
+            this.label_From.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label_From.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
+            this.label_From.Location = new System.Drawing.Point(297, 0);
+            this.label_From.Name = "label_From";
+            this.label_From.Size = new System.Drawing.Size(39, 25);
+            this.label_From.TabIndex = 4;
+            this.label_From.Text = "From:";
+            this.label_From.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // dateTimePicker_From
+            // 
+            this.dateTimePicker_From.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dateTimePicker_From.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dateTimePicker_From.Location = new System.Drawing.Point(342, 3);
+            this.dateTimePicker_From.Name = "dateTimePicker_From";
+            this.dateTimePicker_From.Size = new System.Drawing.Size(96, 20);
+            this.dateTimePicker_From.TabIndex = 6;
+            this.dateTimePicker_From.Value = new System.DateTime(2015, 10, 1, 0, 0, 0, 0);
+            this.dateTimePicker_From.ValueChanged += new System.EventHandler(this.dateTimePicker_From_ValueChanged);
+            // 
+            // dateTimePicker_To
+            // 
+            this.dateTimePicker_To.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dateTimePicker_To.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dateTimePicker_To.Location = new System.Drawing.Point(477, 3);
+            this.dateTimePicker_To.Name = "dateTimePicker_To";
+            this.dateTimePicker_To.Size = new System.Drawing.Size(96, 20);
+            this.dateTimePicker_To.TabIndex = 7;
+            this.dateTimePicker_To.Value = new System.DateTime(2016, 9, 4, 16, 24, 40, 0);
+            this.dateTimePicker_To.ValueChanged += new System.EventHandler(this.dateTimePicker_To_ValueChanged);
             // 
             // zedGraphControl_TestPassFail
             // 
@@ -418,52 +464,6 @@
             this.zedGraphControl_TestPassFailByExecution.Size = new System.Drawing.Size(667, 261);
             this.zedGraphControl_TestPassFailByExecution.TabIndex = 7;
             // 
-            // label_From
-            // 
-            this.label_From.AutoSize = true;
-            this.label_From.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label_From.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
-            this.label_From.Location = new System.Drawing.Point(294, 0);
-            this.label_From.Name = "label_From";
-            this.label_From.Size = new System.Drawing.Size(39, 25);
-            this.label_From.TabIndex = 4;
-            this.label_From.Text = "From:";
-            this.label_From.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // label_To
-            // 
-            this.label_To.AutoSize = true;
-            this.label_To.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label_To.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
-            this.label_To.Location = new System.Drawing.Point(441, 0);
-            this.label_To.Name = "label_To";
-            this.label_To.Size = new System.Drawing.Size(27, 25);
-            this.label_To.TabIndex = 5;
-            this.label_To.Text = "To:";
-            this.label_To.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // dateTimePicker_From
-            // 
-            this.dateTimePicker_From.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dateTimePicker_From.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dateTimePicker_From.Location = new System.Drawing.Point(339, 3);
-            this.dateTimePicker_From.Name = "dateTimePicker_From";
-            this.dateTimePicker_From.Size = new System.Drawing.Size(96, 20);
-            this.dateTimePicker_From.TabIndex = 6;
-            this.dateTimePicker_From.Value = new System.DateTime(2015, 10, 1, 0, 0, 0, 0);
-            this.dateTimePicker_From.ValueChanged += new System.EventHandler(this.dateTimePicker_From_ValueChanged);
-            // 
-            // dateTimePicker_To
-            // 
-            this.dateTimePicker_To.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dateTimePicker_To.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dateTimePicker_To.Location = new System.Drawing.Point(474, 3);
-            this.dateTimePicker_To.Name = "dateTimePicker_To";
-            this.dateTimePicker_To.Size = new System.Drawing.Size(96, 20);
-            this.dateTimePicker_To.TabIndex = 7;
-            this.dateTimePicker_To.Value = new System.DateTime(2016, 9, 4, 16, 24, 40, 0);
-            this.dateTimePicker_To.ValueChanged += new System.EventHandler(this.dateTimePicker_To_ValueChanged);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -498,8 +498,8 @@
         private ZedGraph.ZedGraphControl zedGraphControl_TestsCount;
         private ZedGraph.ZedGraphControl zedGraphControl_TestSets;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
-        private System.Windows.Forms.Label label_Branch;
-        private System.Windows.Forms.ComboBox comboBox_Branch;
+        private System.Windows.Forms.Label label_Version;
+        private System.Windows.Forms.ComboBox comboBox_Version;
         private ZedGraph.ZedGraphControl zedGraphControl_TestPassFail;
         private System.Windows.Forms.TreeView treeView_Tests;
         private System.Windows.Forms.Label label_Node;
