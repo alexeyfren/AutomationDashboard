@@ -95,7 +95,7 @@ namespace AutomationDashboard
             return branches.ToArray();
         }
 
-        public Dictionary<DateTime, double> GetTestsCountByDate(string version, string branch, string node, DateTime from, DateTime to)
+        public Dictionary<DateTime, double> GetTestsCountByDate(string version, string branch, string node, string service, DateTime from, DateTime to)
         {
             Dictionary<DateTime, double> ret = new Dictionary<DateTime, double>();
 
@@ -111,6 +111,9 @@ namespace AutomationDashboard
             if (node != "All")
                 cmd.CommandText += " and threeNode=" + NodeAsInt(node);
 
+            if (service != "All")
+                cmd.CommandText += " and service='" + service + "'";
+
             cmd.CommandText += " ORDER BY StartTime ASC";
 
             MySqlDataAdapter adap = new MySqlDataAdapter(cmd);
@@ -125,7 +128,7 @@ namespace AutomationDashboard
             return ret;
         }
 
-        public Dictionary<DateTime, List<double>> GetPassFailTestsCountByDate(string version, string branch, string node, DateTime from, DateTime to)
+        public Dictionary<DateTime, List<double>> GetPassFailTestsCountByDate(string version, string branch, string node, string service, DateTime from, DateTime to)
         {
             Dictionary<DateTime, List<double>> ret = new Dictionary<DateTime, List<double>>();
 
@@ -141,6 +144,9 @@ namespace AutomationDashboard
             if (node != "All")
                 cmd.CommandText += " and threeNode=" + NodeAsInt(node);
 
+            if (service != "All")
+                cmd.CommandText += " and service='" + service + "'";
+
             cmd.CommandText += " ORDER BY StartTime ASC";
 
             MySqlDataAdapter adap = new MySqlDataAdapter(cmd);
@@ -155,7 +161,7 @@ namespace AutomationDashboard
             return ret;
         }
 
-        public int GetTestStatusCountByDate(string version, string branch, string node, string testCaseID, string status, DateTime from, DateTime to)
+        public int GetTestStatusCountByDate(string version, string branch, string node, string service, string testCaseID, string status, DateTime from, DateTime to)
         {
             int ret = 0;
 
@@ -170,6 +176,9 @@ namespace AutomationDashboard
 
             if (node != "All")
                 cmd.CommandText += " and threeNode=" + NodeAsInt(node);
+
+            if (service != "All")
+                cmd.CommandText += " and service='" + service + "'";
 
             cmd.CommandText += " ORDER BY StartTime ASC";
 
@@ -199,7 +208,7 @@ namespace AutomationDashboard
             return ret;
         }
 
-        public Dictionary<DateTime, string> GetTestCaseExecutionsByDate(string version, string branch, string node, string testCaseID, DateTime from, DateTime to)
+        public Dictionary<DateTime, string> GetTestCaseExecutionsByDate(string version, string branch, string node, string service, string testCaseID, DateTime from, DateTime to)
         {
             Dictionary<DateTime, string> ret = new Dictionary<DateTime, string>();
 
@@ -214,6 +223,9 @@ namespace AutomationDashboard
 
             if (node != "All")
                 cmd.CommandText += " and threeNode=" + NodeAsInt(node);
+
+            if (service != "All")
+                cmd.CommandText += " and service='" + service + "'";
 
             cmd.CommandText += " ORDER BY StartTime ASC";
 
